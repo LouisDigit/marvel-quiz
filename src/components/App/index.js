@@ -4,6 +4,7 @@ import Welcome from "../Welcome";
 import Login from "../Login";
 import ErrorPage from "../ErrorPage";
 import Signup from "../SignUp";
+import ForgetPassword from "../ForgetPassword";
 import "./../../App.css";
 import Header from "./../Header";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -17,6 +18,7 @@ function App() {
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgetpassword" element={<ForgetPassword />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
       <Footer />
