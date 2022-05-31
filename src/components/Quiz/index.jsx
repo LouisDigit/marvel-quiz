@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import { QuizMarvel } from "../quizMarvel";
 import Levels from "../Levels";
 import ProgressBar from "../ProgressBar";
-import { toHaveFocus } from "@testing-library/jest-dom/dist/matchers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+// toast.configure();
 class Quizz extends Component {
   state = {
     levelName: ["debutant", "confirme", "expert"],
@@ -16,6 +18,7 @@ class Quizz extends Component {
     btnDisabled: true,
     userAnswer: null,
     score: 0,
+    showWelcomeMsg: false,
   };
 
   storedDataRef = React.createRef();
@@ -35,11 +38,30 @@ class Quizz extends Component {
     }
   };
 
+  showWelcomeMsg = (pseudo) => {
+    if (!this.state.showWelcomeMsg) {
+      this.setState({
+        showWelcomeMsg: true,
+      });
+
+      toast.warn(`Bienvenue ${pseudo} et bonne chance !`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
   componentDidMount() {
     this.loadQuestions(this.state.levelName[this.state.quizLevel]);
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { pseudo } = this.props.userData;
     if (this.state.storedQuestions !== prevState.storedQuestions) {
       this.setState({
         question: this.state.storedQuestions[this.state.idQuestion].question,
@@ -54,6 +76,10 @@ class Quizz extends Component {
         userAnswer: null,
         btnDisabled: true,
       });
+    }
+
+    if (pseudo) {
+      this.showWelcomeMsg(pseudo);
     }
   }
 
@@ -77,6 +103,26 @@ class Quizz extends Component {
       this.setState((prevState) => ({
         score: prevState.score + 1,
       }));
+
+      // toast.success("Bonne réponse +1 !", {
+      //   position: "top-right",
+      //   autoClose: 2000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      // });
+    } else {
+      // toast.error("Mauvaise réponse !", {
+      //   position: "top-right",
+      //   autoClose: 2000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   progress: undefined,
+      // });
     }
   };
 
@@ -88,9 +134,8 @@ class Quizz extends Component {
         <p
           key={index}
           onClick={() => this.submitAnswer(options)}
-          className={`answerOptions ${
-            this.state.userAnswer === options && "selected"
-          }`}
+          className={`answerOptions ${this.state.userAnswer === options &&
+            "selected"}`}
         >
           {options}
         </p>
